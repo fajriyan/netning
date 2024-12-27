@@ -21,6 +21,7 @@ Project ini adalah sebuah project kecil dengan hanya menggunakan HTML, CSS (Tail
 - [x] Public API Broken
 - [x] conflict library
 - [x] error deployment
+- [ ] create dynamic new api key if limit
 
 ## Access Here (Online)
 
