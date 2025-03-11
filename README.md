@@ -15,6 +15,7 @@ Project ini adalah sebuah project kecil dengan hanya menggunakan HTML, CSS (Tail
 - [x] use template react + vite js
 - [ ] create light & dark mode
 - [ ] implement cache for production
+- [ ] re-create new design better
 
 
 ## Issue
