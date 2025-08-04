@@ -1,5 +1,8 @@
 import { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -8,12 +11,21 @@ const App = () => {
 
   const getData = async () => {
     const request = await fetch(
-      import.meta.env.VITE_URL + import.meta.env.VITE_GHOST
+      "https://api-bdc.net/data/ip-geolocation?ip=&localityLanguage=en&key=" +
+        import.meta.env.VITE_GHOST
     );
     const response = await request.json();
     setLoading(false);
     setData(response);
   };
+
+  delete L.Icon.Default.prototype._getIconUrl;
+  L.Icon.Default.mergeOptions({
+    iconRetinaUrl:
+      "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+    iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+    shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  });
 
   useEffect(() => {
     getData();
@@ -69,6 +81,53 @@ const App = () => {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="mt-4">
+            <div className="bg-white bg-opacity-60 p-4 rounded-md mt-2">
+              <p>
+                <strong>VPN/Proxy Detected:</strong>{" "}
+                {data.security?.isProxy
+                  ? "Ya (Proxy terdeteksi)"
+                  : data.security?.isVpn
+                  ? "Ya (VPN terdeteksi)"
+                  : data.security?.isTor
+                  ? "Ya (Jaringan Tor)"
+                  : "Tidak terdeteksi"}
+              </p>
+              <p className="mt-1">
+                <strong>Anonimitas:</strong>{" "}
+                {data.security?.isHosting
+                  ? "IP milik server hosting"
+                  : "IP publik pengguna"}
+              </p>
+            </div>
+          </div>
+
+          <div className="border-2 border-slate-50/80 rounded-md overflow-hidden mt-4">
+            {data.location?.latitude && data.location?.longitude && (
+              <div className=" h-[300px] shadow-md z-10">
+                <MapContainer
+                  center={[data.location.latitude, data.location.longitude]}
+                  zoom={13}
+                  scrollWheelZoom={false}
+                  className="h-full w-full"
+                >
+                  <TileLayer
+                    attribution='&copy; <a href="https://osm.org/copyright">OpenStreetMap</a> contributors'
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                  />
+                  <Marker
+                    position={[data.location.latitude, data.location.longitude]}
+                  >
+                    <Popup>
+                      {data.location?.localityName},{" "}
+                      {data.location?.principalSubdivision}
+                    </Popup>
+                  </Marker>
+                </MapContainer>
+              </div>
+            )}
           </div>
           <div className="mt-5 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg flex rounded-md overflow-hidden p-4">
             <div className="w-full">
@@ -243,58 +302,6 @@ const App = () => {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
-
-          <div className="mt-5 bg-white bg-opacity-70 backdrop-filter backdrop-blur-lg rounded-md overflow-hidden p-4">
-            <p className="text-sm">
-              Jika kalian terbantu dengan project ini tolong dukung dengan
-              memberi stars di github.
-            </p>
-            <div className="flex mt-2 gap-2">
-              <a
-                className="github-button"
-                href="https://github.com/fajriyan/myip"
-                data-color-scheme="no-preference: dark; light: dark_high_contrast; dark: dark_dimmed;"
-                data-icon="octicon-star"
-                data-size="large"
-                aria-label="Star fajriyan/myip on GitHub"
-              >
-                Star
-              </a>
-              <a
-                className="github-button"
-                href="https://github.com/fajriyan"
-                data-color-scheme="no-preference: dark; light: dark_high_contrast; dark: dark_dimmed;"
-                data-size="large"
-                aria-label="Follow @fajriyan on GitHub"
-              >
-                Follow @fajriyan
-              </a>
-              <a
-                className="github-button"
-                href="https://github.com/fajriyan/myip/issues"
-                data-color-scheme="no-preference: dark; light: dark_high_contrast; dark: dark_dimmed;"
-                data-icon="octicon-issue-opened"
-                data-size="large"
-                aria-label="Issue fajriyan/myip on GitHub"
-              >
-                Issue
-              </a>
-              <a href="https://saweria.co/fajriyan" className="flex">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="16"
-                  height="16"
-                  fill="currentColor"
-                  class="bi bi-award"
-                  viewBox="0 0 16 16"
-                >
-                  <path d="M9.669.864 8 0 6.331.864l-1.858.282-.842 1.68-1.337 1.32L2.6 6l-.306 1.854 1.337 1.32.842 1.68 1.858.282L8 12l1.669-.864 1.858-.282.842-1.68 1.337-1.32L13.4 6l.306-1.854-1.337-1.32-.842-1.68zm1.196 1.193.684 1.365 1.086 1.072L12.387 6l.248 1.506-1.086 1.072-.684 1.365-1.51.229L8 10.874l-1.355-.702-1.51-.229-.684-1.365-1.086-1.072L3.614 6l-.25-1.506 1.087-1.072.684-1.365 1.51-.229L8 1.126l1.356.702z"></path>
-                  <path d="M4 11.794V16l4-1 4 1v-4.206l-2.018.306L8 13.126 6.018 12.1z"></path>
-                </svg>
-                Dukung
-              </a>
             </div>
           </div>
         </div>
