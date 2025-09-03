@@ -3,6 +3,7 @@ import { Helmet } from "react-helmet";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import SpeedTest from "./components/SpeedTest";
 
 const App = () => {
   const [data, setData] = useState([]);
@@ -82,6 +83,8 @@ const App = () => {
               </div>
             </div>
           </div>
+
+          <SpeedTest />
 
           <div className="mt-4">
             <div className="bg-white bg-opacity-60 p-4 rounded-md mt-2">
