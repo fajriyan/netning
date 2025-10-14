@@ -261,12 +261,11 @@ export default function SpeedTest() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-b from-indigo-900 via-purple-900 to-indigo-700 p-6 text-white">
+    <div className="min-h-screen flex items-center justify-center text-white rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-600">
       <div className="w-full max-w-2xl bg-white/5 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
         <h2 className="text-2xl font-bold mb-2">Speed Test</h2>
         <p className="text-sm text-white/70 mb-6">
-          Ukur kecepatan download dan upload secara akurat. Pastikan endpoint
-          test mendukung CORS.
+          Ukur kecepatan download dan upload secara akurat.
         </p>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -362,10 +361,7 @@ export default function SpeedTest() {
         </div>
 
         <div className="mt-6 text-xs text-white/50">
-          Catatan: Beberapa endpoint (mis. httpbin) mungkin membatasi
-          ukuran/kecepatan atau CORS. Jika hasil terlihat aneh, coba ganti
-          TEST_DOWNLOAD_URL / TEST_UPLOAD_URL dengan endpoint yang mendukung
-          file besar dan CORS.
+          Catatan: Testing yang digunakan menggunakan size yang kecil.
         </div>
       </div>
     </div>
