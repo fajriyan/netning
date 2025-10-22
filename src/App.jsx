@@ -34,7 +34,7 @@ const App = () => {
   return (
     <>
       <Helmet>
-        <title>What is my IP | IPVIEW</title>
+        <title>{`Your IP ${data?.ip ?? ""} | IPV`}</title>
         <meta
           name="description"
           content="Aplikasi Simple untuk mengetahui IP Public yang digunakan, dan informasi didalamnya"
