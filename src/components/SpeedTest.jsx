@@ -16,6 +16,28 @@ const makeUploadBlob = (size) => {
   return new Blob(parts, { type: "application/octet-stream" });
 };
 
+const runMultiThreadDownloadTest = async (url, threads = 4) => {
+  const promises = [];
+  const start = performance.now();
+  let totalBytes = 0;
+
+  for (let i = 0; i < threads; i++) {
+    promises.push(
+      fetch(`${url}?r=${Math.random()}`, { cache: "no-store" })
+        .then((res) => res.arrayBuffer())
+        .then((buf) => {
+          totalBytes += buf.byteLength;
+        })
+    );
+  }
+
+  await Promise.all(promises);
+
+  const elapsed = (performance.now() - start) / 1000;
+  const mbps = (totalBytes * 8) / elapsed / (1024 * 1024);
+  return mbps.toFixed(2);
+};
+
 export default function SpeedTest() {
   const [downloadSpeed, setDownloadSpeed] = useState(null); // Mbps or 'Error'
   const [uploadSpeed, setUploadSpeed] = useState(null);
@@ -216,7 +238,15 @@ export default function SpeedTest() {
     setStatusText("Memulai test...");
 
     // Run download first, then upload. Both functions update UI live.
-    await runDownloadTest();
+    // await runDownloadTest();
+
+    // 🔹 Jalankan multi-threaded download test
+    setStatusText("Testing download multi-thread...");
+    const result = await runMultiThreadDownloadTest(TEST_DOWNLOAD_URL, 6);
+    setDownloadSpeed(result);
+    setDownloadProgress(100);
+
+    await new Promise((res) => setTimeout(res, 250));
 
     // small delay so UI can settle
     await new Promise((res) => setTimeout(res, 250));
