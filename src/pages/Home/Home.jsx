@@ -150,29 +150,6 @@ const Home = () => {
               </div>
             </div>
 
-            <SpeedTest />
-
-            <div className="bg-[#ab478d] rounded-xl">
-              <div className=" p-4 rounded-md mt-2 text-slate-200">
-                <p>
-                  <strong>VPN/Proxy Detected:</strong>{" "}
-                  {data?.security?.isProxy
-                    ? "Ya (Proxy terdeteksi)"
-                    : data?.security?.isVpn
-                    ? "Ya (VPN terdeteksi)"
-                    : data?.security?.isTor
-                    ? "Ya (Jaringan Tor)"
-                    : "Tidak terdeteksi"}
-                </p>
-                <p className="mt-1">
-                  <strong>Anonimitas:</strong>{" "}
-                  {data?.security?.isHosting
-                    ? "IP milik server hosting"
-                    : "IP publik pengguna"}
-                </p>
-              </div>
-            </div>
-
             <div className="rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-700 overflow-hidden mt-4 p-3">
               {data?.location?.latitude && data.location?.longitude && (
                 <div className=" h-[300px] shadow-md z-10 rounded-lg overflow-hidden">
@@ -200,6 +177,27 @@ const Home = () => {
                   </MapContainer>
                 </div>
               )}
+            </div>
+
+            <div className="bg-[#ab478d] rounded-xl">
+              <div className=" p-4 rounded-md mt-2 text-slate-200">
+                <p>
+                  <strong>VPN/Proxy Detected:</strong>{" "}
+                  {data?.security?.isProxy
+                    ? "Ya (Proxy terdeteksi)"
+                    : data?.security?.isVpn
+                    ? "Ya (VPN terdeteksi)"
+                    : data?.security?.isTor
+                    ? "Ya (Jaringan Tor)"
+                    : "Tidak terdeteksi"}
+                </p>
+                <p className="mt-1">
+                  <strong>Anonimitas:</strong>{" "}
+                  {data?.security?.isHosting
+                    ? "IP milik server hosting"
+                    : "IP publik pengguna"}
+                </p>
+              </div>
             </div>
 
             <div className="mt-5 overflow-hidden p-4 flex flex-wrap rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-700">
@@ -347,6 +345,8 @@ const Home = () => {
                 </div>
               </div>
             </div>
+
+            <SpeedTest />
           </div>
         )}
       </div>
