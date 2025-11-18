@@ -1,12 +1,15 @@
 import { Helmet } from "react-helmet";
 import SpeedTest from "../../components/SpeedTest";
-import { useIpGeolocation } from "../../hooks/global";
+import { useClientInfo, useIpGeolocation } from "../../hooks/global";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
 const Home = () => {
   const { data, loading } = useIpGeolocation();
+  const { data: client, loading: loadClient } = useClientInfo();
+
+  console.log(client);
 
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -28,7 +31,7 @@ const Home = () => {
       </Helmet>
 
       <div className="min-h-screen bg-[#0f172a]">
-        {loading ? (
+        {loading == true ? (
           <div className="min-h-screen bg-[#0f172a] animate-pulse">
             <div className="container mx-auto py-6 px-3 md:px-0 space-y-6">
               <div className="p-3 rounded-xl bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-300 via-violet-600 to-sky-900">
@@ -48,6 +51,79 @@ const Home = () => {
                       <div className="h-3 w-52 bg-white/10 rounded"></div>
                       <div className="h-3 w-60 bg-white/10 rounded"></div>
                       <div className="h-3 w-48 bg-white/10 rounded"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="">
+                <div className="p-6 rounded-3xl bg-gradient-to-br from-white/20 via-purple-300/20 to-red-400/20 backdrop-blur-2xl border border-white/20 shadow-xl text-white transition-all duration-300">
+                  {/* Header */}
+                  <div className="flex items-center gap-3 mb-5">
+                    <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-xl font-bold shadow-md backdrop-blur">
+                      🧭
+                    </div>
+                    <div>
+                      <h2 className="text-xl font-semibold">Client Info</h2>
+                      <p className="text-sm opacity-70">Detected via Browser</p>
+                    </div>
+                  </div>
+
+                  {/* Device */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                    <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                      <div className="text-xs opacity-70">Device</div>
+                      <div className="font-medium">
+                        <div className="h-4 w-48 bg-white/20 rounded"></div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                      <div className="text-xs opacity-70">OS</div>
+                      <div className="font-medium">
+                        <div className="h-4 w-48 bg-white/20 rounded"></div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                      <div className="text-xs opacity-70">Browser</div>
+                      <div className="font-medium">
+                        <div className="h-4 w-48 bg-white/20 rounded"></div>
+                      </div>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                      <div className="text-xs opacity-70">Mobile?</div>
+                      <div className="font-medium">
+                        <div className="h-4 w-48 bg-white/20 rounded"></div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* User Agent */}
+                  <div className="mb-5">
+                    <div className="text-sm opacity-70 mb-1">User Agent</div>
+                    <div className="bg-white/10 rounded-2xl p-3 text-xs leading-relaxed border border-white/10">
+                      <div className="h-4 w-48 bg-white/20 rounded"></div>
+                    </div>
+                  </div>
+
+                  {/* Languages */}
+                  <div>
+                    <div className="text-sm opacity-70 mb-1">Languages</div>
+                    <div className="flex flex-wrap gap-2">
+                      <span
+                        key={Math.random()}
+                        className="px-3 py-1 rounded-xl bg-white/10 border border-white/10 text-sm"
+                      >
+                        <div className="h-4 w-20 bg-white/20 rounded"></div>
+                      </span>
+                      <span
+                        key={Math.random()}
+                        className="px-3 py-1 rounded-xl bg-white/10 border border-white/10 text-sm"
+                      >
+                        <div className="h-4 w-12 bg-white/20 rounded"></div>
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -145,6 +221,71 @@ const Home = () => {
                         {data?.network?.bgpPrefixLastAddress || "undefined"}
                       </p>
                     </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="">
+              <div className="p-6 rounded-3xl bg-gradient-to-br from-white/20 via-purple-300/20 to-red-400/20 backdrop-blur-2xl border border-white/20 shadow-xl text-white transition-all duration-300">
+                {/* Header */}
+                <div className="flex items-center gap-3 mb-5">
+                  <div className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center text-xl font-bold shadow-md backdrop-blur">
+                    🧭
+                  </div>
+                  <div>
+                    <h2 className="text-xl font-semibold">Client Info</h2>
+                    <p className="text-sm opacity-70">Detected via Browser</p>
+                  </div>
+                </div>
+
+                {/* Device */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-5">
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                    <div className="text-xs opacity-70">Device</div>
+                    <div className="font-medium">{client.device}</div>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                    <div className="text-xs opacity-70">OS</div>
+                    <div className="font-medium">{client.os}</div>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                    <div className="text-xs opacity-70">Browser</div>
+                    <div className="font-medium">
+                      {client.family} {client.versionMajor}
+                    </div>
+                  </div>
+
+                  <div className="p-3 rounded-2xl bg-white/10 border border-white/10 backdrop-blur-sm">
+                    <div className="text-xs opacity-70">Mobile?</div>
+                    <div className="font-medium">
+                      {client.isMobile ? "Yes" : "No"}
+                    </div>
+                  </div>
+                </div>
+
+                {/* User Agent */}
+                <div className="mb-5">
+                  <div className="text-sm opacity-70 mb-1">User Agent</div>
+                  <div className="bg-white/10 rounded-2xl p-3 text-xs leading-relaxed border border-white/10">
+                    {client.userAgentRaw}
+                  </div>
+                </div>
+
+                {/* Languages */}
+                <div>
+                  <div className="text-sm opacity-70 mb-1">Languages</div>
+                  <div className="flex flex-wrap gap-2">
+                    {client.userLanguages?.map((lang) => (
+                      <span
+                        key={lang}
+                        className="px-3 py-1 rounded-xl bg-white/10 border border-white/10 text-sm"
+                      >
+                        {lang}
+                      </span>
+                    ))}
                   </div>
                 </div>
               </div>
