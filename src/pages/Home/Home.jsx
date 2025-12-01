@@ -9,8 +9,6 @@ const Home = () => {
   const { data, loading } = useIpGeolocation();
   const { data: client, loading: loadClient } = useClientInfo();
 
-  console.log(client);
-
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
     iconRetinaUrl:

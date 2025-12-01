@@ -1,55 +1,38 @@
 import { useEffect, useState } from "react";
 import { getClientInfo, getIpGeolocation } from "../lib/api";
 
-export function useIpGeolocation() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+function useFetch(fetchFn) {
+  const [state, setState] = useState({
+    data: null,
+    loading: true,
+    error: null,
+  });
 
   useEffect(() => {
-    let isMounted = true;
+    let active = true;
 
     (async () => {
       try {
-        const result = await getIpGeolocation();
-        if (isMounted) setData(result);
+        const result = await fetchFn();
+        if (active) setState({ data: result, loading: false, error: null });
       } catch (err) {
-        if (isMounted) setError(err.message);
-      } finally {
-        if (isMounted) setLoading(false);
+        if (active)
+          setState({ data: null, loading: false, error: err.message });
       }
     })();
 
     return () => {
-      isMounted = false;
+      active = false;
     };
-  }, []);
+  }, [fetchFn]);
 
-  return { data, loading, error };
+  return state;
 }
+
+export function useIpGeolocation() {
+  return useFetch(getIpGeolocation);
+}
+
 export function useClientInfo() {
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    let isMounted = true;
-
-    (async () => {
-      try {
-        const result = await getClientInfo();
-        if (isMounted) setData(result);
-      } catch (err) {
-        if (isMounted) setError(err.message);
-      } finally {
-        if (isMounted) setLoading(false);
-      }
-    })();
-
-    return () => {
-      isMounted = false;
-    };
-  }, []);
-
-  return { data, loading, error };
+  return useFetch(getClientInfo);
 }
