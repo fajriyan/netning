@@ -1,7 +1,7 @@
 import React, { useState, useRef } from "react";
 
 const TEST_DOWNLOAD_URL = "/testfiles/5MB.bin";
-const TEST_UPLOAD_URL = "https://httpbin.org/post";
+const TEST_UPLOAD_URL = "https://postman-echo.com/post";
 const UPLOAD_SIZE_BYTES = 5 * 1024 * 1024;
 
 const makeUploadBlob = (size) => {
@@ -185,50 +185,61 @@ export default function SpeedTest() {
   const runUploadTest = () => {
     setStatusText("Testing upload...");
     setUploadSpeed(null);
-    setUploadProgress(null);
+    setUploadProgress(0);
 
     const blob = makeUploadBlob(UPLOAD_SIZE_BYTES);
     const xhr = new XMLHttpRequest();
     uploadXhrRef.current = xhr;
 
     const start = performance.now();
-    startTimesRef.current.upload = start;
 
     xhr.upload.onprogress = (e) => {
-      if (e.lengthComputable) {
-        const percent = Math.round((e.loaded / e.total) * 100);
-        setUploadProgress(percent);
-      } else {
-        setUploadProgress(null);
-      }
+      if (!e.lengthComputable) return;
+
       const elapsed = (performance.now() - start) / 1000;
+      if (elapsed <= 0) return;
+
+      const percent = Math.round((e.loaded / e.total) * 100);
       const mbps = (e.loaded * 8) / elapsed / (1024 * 1024);
-      setUploadSpeed(mbps.toFixed(2));
+
+      if (Number.isFinite(mbps)) {
+        setUploadSpeed(mbps.toFixed(2));
+      }
+
+      setUploadProgress(percent);
     };
 
     xhr.onload = () => {
-      if (xhr.status >= 200 && xhr.status < 300) {
-        // finalize speed using total size
-        const elapsed = (performance.now() - start) / 1000;
+      const elapsed = (performance.now() - start) / 1000;
+
+      if (xhr.status >= 200 && xhr.status < 300 && elapsed > 0) {
         const mbps = (blob.size * 8) / elapsed / (1024 * 1024);
-        setUploadSpeed(mbps.toFixed(2));
+        setUploadSpeed(Number.isFinite(mbps) ? mbps.toFixed(2) : "Error");
         setUploadProgress(100);
+        setStatusText("Upload selesai");
       } else {
         setUploadSpeed("Error");
-        setUploadProgress(null);
+        setStatusText("Upload gagal (server reject)");
       }
+
       uploadXhrRef.current = null;
     };
 
     xhr.onerror = () => {
-      console.error("Upload failed");
       setUploadSpeed("Error");
       setUploadProgress(null);
+      setStatusText("Upload error (CORS / network)");
       uploadXhrRef.current = null;
     };
 
+    xhr.ontimeout = () => {
+      setUploadSpeed("Error");
+      setStatusText("Upload timeout");
+      uploadXhrRef.current = null;
+    };
+
+    xhr.timeout = 20000; // 20 detik
     xhr.open("POST", TEST_UPLOAD_URL, true);
-    xhr.setRequestHeader("Content-Type", "application/octet-stream");
     xhr.send(blob);
   };
 
@@ -237,10 +248,6 @@ export default function SpeedTest() {
     setTesting(true);
     setStatusText("Memulai test...");
 
-    // Run download first, then upload. Both functions update UI live.
-    // await runDownloadTest();
-
-    // 🔹 Jalankan multi-threaded download test
     setStatusText("Testing download multi-thread...");
     const result = await runMultiThreadDownloadTest(TEST_DOWNLOAD_URL, 6);
     setDownloadSpeed(result);
@@ -291,7 +298,7 @@ export default function SpeedTest() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center text-white rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-600">
+    <div className="md:min-h-screen p-4 md:p-0 flex items-center justify-center text-white rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-600">
       <div className="w-full max-w-2xl bg-white/5 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
         <h2 className="text-2xl font-bold mb-2">Speed Test</h2>
         <p className="text-sm text-white/70 mb-6">
@@ -360,7 +367,7 @@ export default function SpeedTest() {
           </div>
         </div>
 
-        <div className="mt-6 flex items-center gap-3">
+        <div className="mt-6 flex flex-wrap items-center gap-3">
           {!testing ? (
             <button
               onClick={runFullTest}

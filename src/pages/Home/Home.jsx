@@ -17,6 +17,10 @@ const Home = () => {
     shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
   });
 
+  if (loadClient || !client) {
+    return null;
+  }
+
   return (
     <>
       <Helmet>
@@ -178,7 +182,7 @@ const Home = () => {
         ) : (
           <div className="container mx-auto py-6 px-3 md:px-0 space-y-6">
             <div className=" p-3 rounded-xl text-gray-100 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-300 via-violet-600 to-sky-900 ">
-              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 shadow-2xl md:h-40 flex flex-wrap overflow-hidden">
+              <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 shadow-2xl md:min-h-40 flex flex-wrap overflow-hidden">
                 <div className="w-[100%] md:w-[60%]">
                   <h1>Apa IP Address Publik saya?</h1>
                   <p className="text-3xl font-bold">
@@ -201,7 +205,7 @@ const Home = () => {
                     <div className="flex gap-2">
                       Registry :<p>{data?.network?.registry || "undefined"}</p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-col lg:flex-row gap-1 md:gap-2 my-4 lg:my-0">
                       Organization :
                       <p>{data?.network?.organisation || "undefined"}</p>
                     </div>
