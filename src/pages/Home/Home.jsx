@@ -329,10 +329,10 @@ const Home = () => {
                   {data?.security?.isProxy
                     ? "Ya (Proxy terdeteksi)"
                     : data?.security?.isVpn
-                    ? "Ya (VPN terdeteksi)"
-                    : data?.security?.isTor
-                    ? "Ya (Jaringan Tor)"
-                    : "Tidak terdeteksi"}
+                      ? "Ya (VPN terdeteksi)"
+                      : data?.security?.isTor
+                        ? "Ya (Jaringan Tor)"
+                        : "Tidak terdeteksi"}
                 </p>
                 <p className="mt-1">
                   <strong>Anonimitas:</strong>{" "}
@@ -345,146 +345,191 @@ const Home = () => {
 
             <div className="mt-5 overflow-hidden p-4 flex flex-wrap rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-700">
               <div className="w-full text-gray-200 bg-white/5 backdrop-blur-sm rounded-xl p-3 shadow-2xl">
-                <h2 className="font-semibold text-lg">Operator yg dipakai</h2>
-                <div className="overflow-x-auto">
+                <h2 className="font-semibold text-lg mb-4">Operator yg dipakai</h2>
+
+                {/* Desktop */}
+                <div className="overflow-x-auto hidden md:block">
                   <table className="min-w-full divide-y divide-purple-700 text-sm">
                     <thead className="text-left">
                       <tr>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          asn & numeric
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          organisation
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          name
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          registry
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
+                        <th className="px-4 py-2 font-medium">asn & numeric</th>
+                        <th className="px-4 py-2 font-medium">organisation</th>
+                        <th className="px-4 py-2 font-medium">name</th>
+                        <th className="px-4 py-2 font-medium">registry</th>
+                        <th className="px-4 py-2 font-medium">
                           registered country
                         </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          total Ipv4
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          rank
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          rank Text
-                        </th>
+                        <th className="px-4 py-2 font-medium">total Ipv4</th>
+                        <th className="px-4 py-2 font-medium">rank</th>
+                        <th className="px-4 py-2 font-medium">rank Text</th>
                       </tr>
                     </thead>
+
                     <tbody className="divide-y divide-purple-500">
-                      <>
-                        <tr>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].asn || "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].organisation ||
-                              "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].name || "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].registry ||
-                              "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0]
-                              .registeredCountryName || "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].totalIpv4Addresses ||
-                              "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].rank || "undefined"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {data?.network?.carriers?.[0].rankText ||
-                              "undefined"}
-                          </td>
-                        </tr>
-                      </>
+                      <tr>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].asn || "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].organisation ||
+                            "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].name || "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].registry || "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].registeredCountryName ||
+                            "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].totalIpv4Addresses ||
+                            "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].rank || "undefined"}
+                        </td>
+                        <td className="px-4 py-2">
+                          {data?.network?.carriers?.[0].rankText || "undefined"}
+                        </td>
+                      </tr>
                     </tbody>
                   </table>
                 </div>
-                <h2 className="font-semibold text-lg mt-4">Jalur Operator</h2>
-                <div className="overflow-x-auto">
+
+                {/* Mobile */}
+                <div className="md:hidden border border-purple-500 rounded-lg p-4 text-sm space-y-1">
+                  <div>
+                    <span className="font-medium">ASN:</span>{" "}
+                    {data?.network?.carriers?.[0].asn || "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Organisation:</span>{" "}
+                    {data?.network?.carriers?.[0].organisation || "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Name:</span>{" "}
+                    {data?.network?.carriers?.[0].name || "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Registry:</span>{" "}
+                    {data?.network?.carriers?.[0].registry || "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Country:</span>{" "}
+                    {data?.network?.carriers?.[0].registeredCountryName ||
+                      "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Total IPv4:</span>{" "}
+                    {data?.network?.carriers?.[0].totalIpv4Addresses ||
+                      "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Rank:</span>{" "}
+                    {data?.network?.carriers?.[0].rank || "undefined"}
+                  </div>
+
+                  <div>
+                    <span className="font-medium">Rank Text:</span>{" "}
+                    {data?.network?.carriers?.[0].rankText || "undefined"}
+                  </div>
+                </div>
+
+                <h2 className="font-semibold text-lg mt-10 mb-4">Jalur Operator</h2>
+                {/* Desktop Table */}
+                <div className="overflow-x-auto hidden md:block">
                   <table className="min-w-full divide-y divide-purple-700 text-sm">
                     <thead className="text-left">
                       <tr>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          no
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          asn & numeric
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          organisation
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          name
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          registry
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
+                        <th className="px-4 py-2 font-medium">no</th>
+                        <th className="px-4 py-2 font-medium">asn & numeric</th>
+                        <th className="px-4 py-2 font-medium">organisation</th>
+                        <th className="px-4 py-2 font-medium">name</th>
+                        <th className="px-4 py-2 font-medium">registry</th>
+                        <th className="px-4 py-2 font-medium">
                           registered country
                         </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          total Ipv4
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          rank
-                        </th>
-                        <th className="whitespace-nowrap px-4 py-2 font-medium">
-                          rank Text
-                        </th>
+                        <th className="px-4 py-2 font-medium">total Ipv4</th>
+                        <th className="px-4 py-2 font-medium">rank</th>
+                        <th className="px-4 py-2 font-medium">rank Text</th>
                       </tr>
                     </thead>
 
                     <tbody className="divide-y divide-purple-500">
                       {data.network?.viaCarriers.map((vca, index) => (
-                        <tr key={Math.random(20)}>
-                          <td className="whitespace-nowrap px-4 py-2 ">
-                            {index + 1}
+                        <tr key={index}>
+                          <td className="px-4 py-2">{index + 1}</td>
+                          <td className="px-4 py-2">
+                            {vca.asn} | {vca.asnNumeric}
                           </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.asn + " | " + vca.asnNumeric}
+                          <td className="px-4 py-2">{vca.organisation}</td>
+                          <td className="px-4 py-2">{vca.name}</td>
+                          <td className="px-4 py-2">{vca.registry}</td>
+                          <td className="px-4 py-2">
+                            {vca.registeredCountryName} ({vca.registeredCountry}
+                            )
                           </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.organisation}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.name}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.registry}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.registeredCountryName +
-                              " (" +
-                              vca.registeredCountry +
-                              ")"}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
+                          <td className="px-4 py-2">
                             {vca.totalIpv4Addresses}
                           </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.rank}
-                          </td>
-                          <td className="whitespace-nowrap px-4 py-2">
-                            {vca.rankText}
-                          </td>
+                          <td className="px-4 py-2">{vca.rank}</td>
+                          <td className="px-4 py-2">{vca.rankText}</td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
+                </div>
+
+                {/* Mobile List */}
+                <div className="space-y-4 md:hidden">
+                  {data.network?.viaCarriers.map((vca, index) => (
+                    <div
+                      key={index}
+                      className="border border-purple-500 rounded-lg p-4 text-sm"
+                    >
+                      <div className="font-semibold mb-2">#{index + 1}</div>
+
+                      <div>
+                        <span className="font-medium">ASN:</span> {vca.asn} |{" "}
+                        {vca.asnNumeric}
+                      </div>
+                      <div>
+                        <span className="font-medium">Organisation:</span>{" "}
+                        {vca.organisation}
+                      </div>
+                      <div>
+                        <span className="font-medium">Name:</span> {vca.name}
+                      </div>
+                      <div>
+                        <span className="font-medium">Registry:</span>{" "}
+                        {vca.registry}
+                      </div>
+                      <div>
+                        <span className="font-medium">Country:</span>{" "}
+                        {vca.registeredCountryName} ({vca.registeredCountry})
+                      </div>
+                      <div>
+                        <span className="font-medium">Total IPv4:</span>{" "}
+                        {vca.totalIpv4Addresses}
+                      </div>
+                      <div>
+                        <span className="font-medium">Rank:</span> {vca.rank}
+                      </div>
+                      <div>
+                        <span className="font-medium">Rank Text:</span>{" "}
+                        {vca.rankText}
+                      </div>
+                    </div>
+                  ))}
                 </div>
               </div>
             </div>
