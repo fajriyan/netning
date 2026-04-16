@@ -534,7 +534,7 @@ const Home = () => {
               </div>
             </div>
 
-            <SpeedTest />
+            {/* <SpeedTest /> */}
           </div>
         )}
       </div>
