@@ -298,8 +298,8 @@ export default function SpeedTest() {
   };
 
   return (
-    <div className="md:min-h-screen p-4 md:p-0 flex items-center justify-center text-white rounded-xl bg-[conic-gradient(at_right,_var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-600">
-      <div className="w-full max-w-2xl bg-white/5 backdrop-blur-sm rounded-2xl p-8 shadow-2xl">
+    <div className="md:min-h-screen p-4 md:p-0 flex items-center justify-center text-white rounded-xl bg-[conic-gradient(at_right,var(--tw-gradient-stops))] from-red-950 via-violet-600 to-orange-600">
+      <div className="w-full max-w-2xl bg-white/5 backdrop-blur-xs rounded-2xl p-8 shadow-2xl">
         <h2 className="text-2xl font-bold mb-2">Speed Test</h2>
         <p className="text-sm text-white/70 mb-6">
           Ukur kecepatan download dan upload secara akurat.

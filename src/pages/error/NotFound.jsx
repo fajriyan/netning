@@ -14,9 +14,9 @@ const NotFound = () => {
         <link rel="canonical" href="https://ipview.pages.dev/" />
       </Helmet>
       <div className="container mx-auto py-6 px-3 md:px-0 space-y-6">
-        <div className=" p-3 rounded-xl overflow-hidden text-gray-100 bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-100 via-violet-600 to-sky-900 relative">
-          <div className="animate-pulse bg-[radial-gradient(ellipse_at_bottom,_var(--tw-gradient-stops))] from-amber-300 via-violet-600 to-sky-900 absolute w-full h-full inset-0"></div>
-          <div className="bg-white/5 backdrop-blur-sm rounded-xl p-3 shadow-2xl md:h-[90dvh] flex flex-wrap flex-col justify-center items-center overflow-hidden">
+        <div className=" p-3 rounded-xl overflow-hidden text-gray-100 bg-[radial-gradient(ellipse_at_bottom,var(--tw-gradient-stops))] from-amber-100 via-violet-600 to-sky-900 relative">
+          <div className="animate-pulse bg-[radial-gradient(ellipse_at_bottom,var(--tw-gradient-stops))] from-amber-300 via-violet-600 to-sky-900 absolute w-full h-full inset-0"></div>
+          <div className="bg-white/5 backdrop-blur-xs rounded-xl p-3 shadow-2xl md:h-[90dvh] flex flex-wrap flex-col justify-center items-center overflow-hidden">
             <h1 className="font-semibold text-2xl">Error 404</h1>
             <Link
               to="/"
