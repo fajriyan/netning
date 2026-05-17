@@ -1,4 +1,4 @@
-import { Helmet } from "react-helmet";
+import { useEffect } from "react";
 import SpeedTest from "../../components/SpeedTest";
 import { useClientInfo, useIpGeolocation } from "../../hooks/global";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
@@ -8,6 +8,10 @@ import "leaflet/dist/leaflet.css";
 const Home = () => {
   const { data, loading } = useIpGeolocation();
   const { data: client, loading: loadClient } = useClientInfo();
+
+  useEffect(() => {
+    document.title = `Your IP ${data?.ip ?? ""} | IPV`;
+  }, [data?.ip]);
 
   delete L.Icon.Default.prototype._getIconUrl;
   L.Icon.Default.mergeOptions({
@@ -22,17 +26,7 @@ const Home = () => {
   }
 
   return (
-    <>
-      <Helmet>
-        <title>{`Your IP ${data?.ip ?? ""} | IPV`}</title>
-        <meta
-          name="description"
-          content="Aplikasi Simple untuk mengetahui IP Public yang digunakan, dan informasi didalamnya"
-        />
-        <link rel="canonical" href="https://ipview.pages.dev/" />
-      </Helmet>
-
-      <div className="min-h-screen bg-[#0f172a]">
+    <div className="min-h-screen bg-[#0f172a]">
         {loading == true ? (
           <div className="min-h-screen bg-[#0f172a] animate-pulse">
             <div className="container mx-auto py-6 px-3 md:px-0 space-y-6">
@@ -537,8 +531,7 @@ const Home = () => {
             {/* <SpeedTest /> */}
           </div>
         )}
-      </div>
-    </>
+    </div>
   );
 };
 

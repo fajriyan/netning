@@ -1,18 +1,13 @@
-import React from "react";
-import { Helmet } from "react-helmet";
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 
 const NotFound = () => {
+  useEffect(() => {
+    document.title = "Page Not Found 404 | IPV";
+  }, []);
+
   return (
     <div className="min-h-screen bg-[#0f172a]">
-      <Helmet>
-        <title>Page Not Found 404 | IPV</title>
-        <meta
-          name="description"
-          content="Aplikasi Simple untuk mengetahui IP Public yang digunakan, dan informasi didalamnya"
-        />
-        <link rel="canonical" href="https://ipview.pages.dev/" />
-      </Helmet>
       <div className="container mx-auto py-6 px-3 md:px-0 space-y-6">
         <div className=" p-3 rounded-xl overflow-hidden text-gray-100 bg-[radial-gradient(ellipse_at_bottom,var(--tw-gradient-stops))] from-amber-100 via-violet-600 to-sky-900 relative">
           <div className="animate-pulse bg-[radial-gradient(ellipse_at_bottom,var(--tw-gradient-stops))] from-amber-300 via-violet-600 to-sky-900 absolute w-full h-full inset-0"></div>
