@@ -38,6 +38,54 @@ const formatValue = (value) => {
   return value;
 };
 
+const formatResultTimestamp = (isoString) => {
+  if (!isoString) return "—";
+
+  return new Intl.DateTimeFormat("id-ID", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(isoString));
+};
+
+const buildResultPayload = ({
+  downloadSpeed,
+  uploadSpeed,
+  latency,
+  status,
+  completedAt,
+}) => ({
+  app: "IPV Speed Test",
+  status,
+  completedAt: completedAt ?? new Date().toISOString(),
+  metrics: {
+    downloadMbps: downloadSpeed,
+    uploadMbps: uploadSpeed,
+    latencyMs: latency,
+  },
+});
+
+const buildResultText = (payload) =>
+  [
+    "IPV Speed Test Result",
+    `Completed: ${formatResultTimestamp(payload.completedAt)}`,
+    `Status: ${payload.status || "—"}`,
+    `Download: ${formatValue(payload.metrics.downloadMbps)} Mbps`,
+    `Upload: ${formatValue(payload.metrics.uploadMbps)} Mbps`,
+    `Latency: ${formatValue(payload.metrics.latencyMs)} ms`,
+  ].join("\n");
+
+const downloadTextFile = (filename, content, type) => {
+  const blob = new Blob([content], { type });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = filename;
+  link.click();
+
+  URL.revokeObjectURL(url);
+};
+
 const createUploadBlob = (sizeBytes) => {
   const chunk = new Uint8Array(64 * 1024);
   for (let i = 0; i < chunk.length; i += 1) {
@@ -139,6 +187,7 @@ const SpeedTestPage = () => {
   const [status, setStatus] = useState("Siap menjalankan test.");
   const [isTesting, setIsTesting] = useState(false);
   const [lastUpdated, setLastUpdated] = useState("");
+  const [completedAt, setCompletedAt] = useState(null);
 
   const downloadAbortRef = useRef(null);
   const uploadAbortRef = useRef(null);
@@ -168,6 +217,7 @@ const SpeedTestPage = () => {
     setStatus("Siap menjalankan test.");
     setIsTesting(false);
     setLastUpdated("");
+    setCompletedAt(null);
   };
 
   const runFullTest = async () => {
@@ -190,6 +240,7 @@ const SpeedTestPage = () => {
     setDownloadProgress(0);
     setUploadProgress(0);
     setLastUpdated("");
+    setCompletedAt(null);
 
     try {
       const pings = [];
@@ -284,6 +335,72 @@ const SpeedTestPage = () => {
     uploadAbortRef.current?.abort();
     setStatus("Test dihentikan.");
     setIsTesting(false);
+  };
+
+  const getResultPayload = () =>
+    buildResultPayload({
+      downloadSpeed,
+      uploadSpeed,
+      latency,
+      status,
+      completedAt,
+    });
+
+  const getResultFilename = (payload) => {
+    const stamp = payload.completedAt
+      ? new Date(payload.completedAt).toISOString().replace(/[:.]/g, "-")
+      : "result";
+
+    return `ipv-speed-test-${stamp}.json`;
+  };
+
+  const copyResult = async () => {
+    if (typeof navigator === "undefined" || !navigator.clipboard) {
+      setStatus("Clipboard tidak tersedia di browser ini.");
+      return;
+    }
+
+    const payload = getResultPayload();
+
+    try {
+      await navigator.clipboard.writeText(buildResultText(payload));
+      setStatus("Hasil disalin ke clipboard.");
+    } catch {
+      setStatus("Gagal menyalin hasil.");
+    }
+  };
+
+  const shareResult = async () => {
+    const payload = getResultPayload();
+    const text = buildResultText(payload);
+
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        await navigator.share({
+          title: "IPV Speed Test Result",
+          text,
+        });
+        setStatus("Hasil dibagikan.");
+        return;
+      } catch {
+        setStatus("Berbagi dibatalkan.");
+        return;
+      }
+    }
+
+    await copyResult();
+  };
+
+  const downloadResult = () => {
+    const payload = getResultPayload();
+    const filename = getResultFilename(payload);
+
+    downloadTextFile(
+      filename,
+      JSON.stringify(payload, null, 2),
+      "application/json"
+    );
+    setStatus("Hasil diunduh.");
   };
 
   return (
@@ -471,6 +588,55 @@ const SpeedTestPage = () => {
                   <li>Upload memakai request echo, jadi bisa terkena CORS.</li>
                   <li>Kalau upload gagal, page tetap menampilkan hasil lain.</li>
                 </ul>
+              </div>
+
+              <div className="rounded-[2rem] border border-white/10 bg-white/5 p-6 shadow-xl shadow-black/20">
+                <h2 className="text-xl font-semibold">Bagikan hasil</h2>
+                <p className="mt-2 text-sm leading-6 text-slate-300">
+                  Simpan hasil sebagai JSON, copy ringkasan, atau share
+                  langsung lewat native share bila browser mendukung.
+                </p>
+
+                <div className="mt-5 grid gap-3 sm:grid-cols-2">
+                  <button
+                    type="button"
+                    onClick={shareResult}
+                    className="rounded-full bg-cyan-400 px-4 py-2.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-300"
+                  >
+                    Share
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={copyResult}
+                    className="rounded-full border border-white/10 bg-white/5 px-4 py-2.5 text-sm text-slate-200 transition hover:bg-white/10"
+                  >
+                    Copy
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={downloadResult}
+                    className="rounded-full border border-violet-400/30 bg-violet-500/15 px-4 py-2.5 text-sm text-violet-100 transition hover:bg-violet-500/25 sm:col-span-2"
+                  >
+                    Download JSON
+                  </button>
+                </div>
+
+                <div className="mt-4 rounded-2xl border border-white/10 bg-slate-950/40 p-4 text-xs leading-6 text-slate-400">
+                  <div className="flex justify-between gap-4">
+                    <span>Download</span>
+                    <span>{formatValue(downloadSpeed)} Mbps</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span>Upload</span>
+                    <span>{formatValue(uploadSpeed)} Mbps</span>
+                  </div>
+                  <div className="flex justify-between gap-4">
+                    <span>Latency</span>
+                    <span>{formatValue(latency)} ms</span>
+                  </div>
+                </div>
               </div>
             </aside>
           </div>
