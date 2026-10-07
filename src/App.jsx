@@ -4,15 +4,15 @@ import NotFound from "./pages/error/NotFound";
 import SpeedTestPage from "./pages/SpeedTest/SpeedTestPage";
 
 const App = () => {
-  return (
-    <>
-      <Routes>
-        <Route path="/" element={<SpeedTestPage />} />
-        <Route path="/ip" element={<Home />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </>
-  );
+   return (
+      <>
+         <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="/speed-test" element={<SpeedTestPage />} />
+            <Route path="*" element={<NotFound />} />
+         </Routes>
+      </>
+   );
 };
 
 export default App;
